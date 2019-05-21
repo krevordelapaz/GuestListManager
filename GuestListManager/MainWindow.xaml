@@ -1,0 +1,148 @@
+﻿<Window x:Class="GuestListManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        WindowState="Maximized"
+        xmlns:converters="clr-namespace:GuestListManager.Converters"
+        mc:Ignorable="d"
+        Title="Guest List Manager" Height="1000" Width="1500">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontWeight" Value="UltraBlack"/>
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+
+        <converters:BooleanYesNoConverter x:Key="BooleanYesNoConverter" />
+        <converters:GuestCheckedInCounterConverter x:Key="GuestCheckedInCounterConverter" />
+
+    </Window.Resources>
+
+    <Window.Background>
+        <ImageBrush ImageSource="Images\Background.jpg" Stretch="UniformToFill" />
+    </Window.Background>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <TextBlock Text="Search: " FontWeight="Black" FontSize="20"/>
+            <TextBox Width="400" VerticalAlignment="Center" Text="{Binding Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Content="Upload Guest" HorizontalAlignment="Right" Margin="3,0,0,0" Command="{Binding UploadGuestListCommand}" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+        </StackPanel>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".3*"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <GroupBox Header="Guests" FontWeight="UltraBold" FontSize="16">
+                    <ListBox ItemsSource="{Binding Guests, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedGuest}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </GroupBox>
+                <Button Grid.Row="1" Height="30" Width="100" HorizontalAlignment="Left" Margin="4,0,0,0" Content="Add Guest" Command="{Binding EnableAddGuestCommand}"/>
+            </Grid>
+
+            <Border Grid.Row="1" Grid.Column="1" Margin="10,4"
+                    CornerRadius="10" BorderBrush="White" BorderThickness="1">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="0,30,0,0">
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="FontWeight" Value="UltraBlack"/>
+                                <Setter Property="FontSize" Value="25" />
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width=".65*"/>
+                            <ColumnDefinition Width=".8*"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="*" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Name:" Grid.Column="0"/>
+                        <TextBlock Text="{Binding SelectedGuest.Name}" Grid.Column="1"/>
+
+                        <TextBlock Text="Designated Table/s:" Grid.Column="0" Grid.Row="1"/>
+                        <TextBlock Text="{Binding SelectedGuest.DesignatedSeats}" Grid.Column="1" Grid.Row="1"/>
+
+                        <TextBlock Text="With Souvenir:" Grid.Column="0" Grid.Row="2"/>
+                        <TextBlock Text="{Binding SelectedGuest.HasFan, Converter={StaticResource BooleanYesNoConverter}}" Grid.Column="1" Grid.Row="2"/>
+
+                        <TextBlock Text="Already Check In?" Grid.Column="0" Grid.Row="3"/>
+                        <TextBlock Text="{Binding SelectedGuest.IsCheckedIn, Converter={StaticResource BooleanYesNoConverter}}" Grid.Column="1" Grid.Row="3"/>
+
+                        <Button Grid.Row="5" Grid.Column="0" Content="Check-in" Height="50" Width="150" HorizontalAlignment="Left" Margin="0,0,10,0" Command="{Binding CheckInGuestCommand}" FontSize="30" FontWeight="Black"/>
+
+                        <GroupBox Grid.Row="6" Grid.ColumnSpan="2" Margin="0,25,0,0" Header="Add Guest" 
+                                  FontSize="15" FontWeight="UltraBlack"
+                                  Visibility="{Binding AddGuestVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <Grid Margin="3">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="50"/>
+                                        <RowDefinition Height="50"/>
+                                        <RowDefinition Height="20" />
+                                        <RowDefinition Height="50" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="First Name: " FontSize="30" FontWeight="Black"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" Margin="3" BorderBrush="LightSlateGray" FontSize="30" Width="300" HorizontalAlignment="Left" Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Last Name: " FontSize="30" FontWeight="Black"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="3" BorderBrush="LightSlateGray" FontSize="30" Width="300" HorizontalAlignment="Left" Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                    <StackPanel Grid.Row="3" Orientation="Horizontal" Grid.ColumnSpan="2">
+                                        <Button Grid.Row="3" Grid.Column="0" Margin="5" Width="150" Content="Add" HorizontalAlignment="Left" FontSize="25" FontWeight="Black" Command="{Binding AddGuestCommand}"/>
+                                        <Button Grid.Row="4" Grid.Column="0" Margin="5" Width="150" Content="Cancel" HorizontalAlignment="Left" FontSize="25" FontWeight="Black" Command="{Binding CancelAddGuestCommand}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </ScrollViewer>
+                        </GroupBox>
+
+                        <Image Source="Images\monogramtransparent.png" Grid.Row="7"/>
+                    </Grid>
+                    <Image Source="Images\Caricature.png" Grid.RowSpan="2" Stretch="Uniform" HorizontalAlignment="Right" Margin="0,0,30,0" VerticalAlignment="Center"/>
+                    <StackPanel Grid.Row="1">
+                        <TextBlock  HorizontalAlignment="Left" Text="{Binding Guests.Count, StringFormat=Guest Count: {0}}" />
+                        <TextBlock  HorizontalAlignment="Left" Text="{Binding Guests, StringFormat=Guest Checked In: {0}, Converter={StaticResource GuestCheckedInCounterConverter}}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Border Grid.Row="1" Grid.Column="1" Margin="13,6"
+                    CornerRadius="10" BorderBrush="White" BorderThickness="1"/>
+        </Grid>
+    </Grid>
+</Window>
