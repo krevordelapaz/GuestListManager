@@ -108,3 +108,4 @@ GuestListManager/obj/Release/TempPE/Properties.Resources.Designer.cs.dll
 *.baml
 *.json
 .vs/GuestListManager/v16/.suo
+GuestListManager/App.config
